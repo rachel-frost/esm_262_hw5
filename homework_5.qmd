@@ -3,6 +3,7 @@ title: "Homework 5"
 author: "Rachel Frost & Alecia Dezzani"
 format: html
 editor: visual
+theme: minty
 ---
 
 # Notes (delete this section later)
@@ -11,7 +12,6 @@ editor: visual
 With a partner, think of an example complex data science task/program that you might want to design with:
 
 - at least 4 modules
-- 1 module must be used at least twice
 - at least one for (or while) loop
 
 Planning - Step 1
@@ -19,8 +19,6 @@ Planning - Step 1
 - sketch a diagram that shows how these modules would be put together to go from inputs to output for the overall program (30pts)
 - write a contract for the overall program (input, output, parameters) (10pts)
 - break the program into modules (naming them appropriately), write a contract for each one (20pts)
-
-*Important - Check in with myself or Ojas to get the OK on your plan BEFORE you go to Step 2*
 
 Implementation - Step 2
 
@@ -37,3 +35,62 @@ costs for no action (old bridge) - accidents/fatalities - infrastructure damages
 costs for building new bridge - construction materials - construction labor - if there's too much rain, have to stop construction and delays cost X amount (for loop)
 
 final module - add modules of each option and print results
+
+## Introduction
+The California Department of Fish and Wildlife (CDFW) and California Department of Transportation (Caltrans) is considering the replacement of the Sandia Creek Drive crossing with a new bridge by 2027 will reconnect over twelve miles of habitat along the Santa Margarita River for endangered Southern California Steelhead trout (Oncorhynchus mykiss irideus) in northern San Diego County. The Santa Margarita river would be the first perennially-flowing river in Southern California with no anadromous fish migration barriers in its mainstem. The new bridge would also improve emergency response access and evacuation reliability, as its proposed design can withstand a 100-year storm event without overtopping with flowing water.
+
+The agencies wish to compare costs of two options: no action (keeping the existing bridge) and constructing a new bridge. The option with the lowest cost will be chosen moving forward.
+
+The following program uses several modules to compare cost scenarios:
+```{r}
+knitr::include_graphics("flowchart.jpg")
+```
+
+The following R packages are needed for this program:
+```{r}
+library(tidyverse)
+library(here)
+```
+
+## Program Contract
+
+#### Inputs
+
+#### Parameters
+
+#### Output
+
+
+
+### Option 1: No Action (Keep Existing Bridge)
+
+#### 1.1 Calculate the cost of fatalities caused by flooding
+
+```{r}
+source(here("fatal_cost.R"))
+```
+
+
+#### 1.2 Calculate the cost of bridge repairs caused by flooding
+
+#### Total Cost of Option 1
+
+
+
+### Option 2: Construct New Bridge
+
+#### 2.1 Calculate the cost of Materials
+
+#### 2.2 Calculate the cost of Labor
+
+#### Total Cost of Option 2
+
+
+
+### Compare Option 1 vs Option 2
+
+
+
+## Results
+
+
