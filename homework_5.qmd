@@ -1,26 +1,39 @@
 ---
 title: "Homework 5"
+author: "Rachel Frost & Alecia Dezzani"
 format: html
 editor: visual
 ---
 
-## Quarto
+# Notes (delete this section later)
+### Assignment 5
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+With a partner, think of an example complex data science task/program that you might want to design with:
 
-## Running Code
+- at least 4 modules
+- 1 module must be used at least twice
+- at least one for (or while) loop
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+Planning - Step 1
 
-```{r}
-1 + 1
-```
+- sketch a diagram that shows how these modules would be put together to go from inputs to output for the overall program (30pts)
+- write a contract for the overall program (input, output, parameters) (10pts)
+- break the program into modules (naming them appropriately), write a contract for each one (20pts)
 
-You can add options to executable code like this
+*Important - Check in with myself or Ojas to get the OK on your plan BEFORE you go to Step 2*
 
-```{r}
-#| echo: false
-2 * 2
-```
+Implementation - Step 2
 
-The `echo: false` option disables the printing of code (only output is displayed).
+- write functions (stored in separate documents) for each module (30pts)
+- write an overall program that manages calls to each function (10pts)
+- create some data and use it to test the program (10pts)
+
+Ideas
+
+based on amount of precipitation, calculate the height of the water (goes into both options)
+
+costs for no action (old bridge) - accidents/fatalities - infrastructure damages as a function of precipitation - increased travel times due to rerouting when bridge closed
+
+costs for building new bridge - construction materials - construction labor - if there's too much rain, have to stop construction and delays cost X amount (for loop)
+
+final module - add modules of each option and print results
