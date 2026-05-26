@@ -8,7 +8,7 @@
 # function definition
 bridge_repair_cost = function(floods, spent = 1000000) {
   # calculate annual repair cost
-  result = rho * height * flow * g * Keff
-  return(result)
+  cost = floods * spent
+  return(cost)
 }
 
