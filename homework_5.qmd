@@ -68,12 +68,26 @@ library(here)
 
 ```{r}
 source(here("fatal_cost.R"))
-```
 
+# use function, and enter the number of annual fatalities below. 
+npv <- fatal_cost(100)
+print(npv)
+
+npv_format <- format(npv, big.mark = ",", scientific = FALSE)
+sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", npv_format)
+```
 
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
 
+
 #### Total Cost of Option 1
+```{r}
+#total_op1 = npv + repairs
+
+#print(total_op1)
+
+#sprintf("The total cost of no action is estimated at %n.", total_op1)
+```
 
 
 
