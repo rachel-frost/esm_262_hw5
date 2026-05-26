@@ -59,6 +59,12 @@ library(here)
 ## Program Contract *(add to this section as you build each function)*
 
 #### Inputs
+<<<<<<< HEAD
+=======
+`crashcount`: the number of fatalities per year due to water overtopping the bridge
+
+`river_height_data`: data with daily precipitation amounts 
+>>>>>>> fb4b5a67035fc529f493545a61efab6e03f8f0fc
 
 `crashcount`: the number of fatalities per year due to water over-topping the bridge `river_height_data`: data with daily precipitation amounts
 
@@ -75,7 +81,7 @@ river_ht <- 8 + cumsum(changes) # Optimal river height is 8 meters, flooding whe
 print(river_ht)
 
 river_height_data <- data.frame(
-  day = seq(1,365, countby=1),
+  day = seq(1,365),
   river_ht
 )
 ```
@@ -108,6 +114,7 @@ Inputs: annual fatalities Outputs: numeric NPV of fatality costs
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
 
 ```{r}
+<<<<<<< HEAD
 # Module 1.2 - repair_cost()
 
 repair_cost <- function(river_height_data,
@@ -126,6 +133,15 @@ repair_cost <- function(river_height_data,
 
   return(total_repair)
 }
+=======
+# Based on river height data, calculate the number of flooding events per year.
+
+#initialization
+
+river_height_data$flood = 0
+
+
+>>>>>>> fb4b5a67035fc529f493545a61efab6e03f8f0fc
 
 ```
 
