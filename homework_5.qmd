@@ -72,7 +72,7 @@ river_ht <- 8 + cumsum(changes) # Optimal river height is 8 meters, flooding whe
 print(river_ht)
 
 river_height_data <- data.frame(
-  day = seq(1,365, countby=1),
+  day = seq(1,365),
   river_ht
 )
 ```
