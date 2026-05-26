@@ -52,9 +52,30 @@ library(tidyverse)
 library(here)
 ```
 
-## Program Contract
+## Program Contract *(add to this section as you build each function)*
 
 #### Inputs
+`crashcount`: the number of fatalities per year due to water overtopping the bridge
+`river_height_data`: data with daily precipitation amounts 
+
+
+```{r}
+# Example: generate river height data 
+
+# set seed for reproducibility
+set.seed(262)
+
+# Generate 365 steps: changes are either -1, 0, or 1
+changes <- sample(c(-1, 0, 1), 365, replace = TRUE)
+river_ht <- 8 + cumsum(changes) # Optimal river height is 8 meters, flooding when height > 20m
+
+print(river_ht)
+
+river_height_data <- data.frame(
+  day = seq(1,365, countby=1),
+  river_ht
+)
+```
 
 #### Parameters
 
@@ -78,6 +99,9 @@ sprintf("The total cost of fatalities from the existing bridge is estimated to b
 ```
 
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
+```{r}
+
+```
 
 
 #### Total Cost of Option 1
