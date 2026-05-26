@@ -7,6 +7,7 @@ theme: minty
 ---
 
 # Notes (delete this section later)
+
 ### Assignment 5
 
 With a partner, think of an example complex data science task/program that you might want to design with:
@@ -37,16 +38,19 @@ costs for building new bridge - construction materials - construction labor - if
 final module - add modules of each option and print results
 
 ## Introduction
+
 The California Department of Fish and Wildlife (CDFW) and California Department of Transportation (Caltrans) is considering the replacement of the Sandia Creek Drive crossing with a new bridge by 2027 will reconnect over twelve miles of habitat along the Santa Margarita River for endangered Southern California Steelhead trout (Oncorhynchus mykiss irideus) in northern San Diego County. The Santa Margarita river would be the first perennially-flowing river in Southern California with no anadromous fish migration barriers in its mainstem. The new bridge would also improve emergency response access and evacuation reliability, as its proposed design can withstand a 100-year storm event without overtopping with flowing water.
 
 The agencies wish to compare costs of two options: no action (keeping the existing bridge) and constructing a new bridge. The option with the lowest cost will be chosen moving forward.
 
 The following program uses several modules to compare cost scenarios:
+
 ```{r}
 knitr::include_graphics("flowchart.jpg")
 ```
 
 The following R packages are needed for this program:
+
 ```{r}
 library(tidyverse)
 library(here)
@@ -55,9 +59,8 @@ library(here)
 ## Program Contract *(add to this section as you build each function)*
 
 #### Inputs
-`crashcount`: the number of fatalities per year due to water overtopping the bridge
-`river_height_data`: data with daily precipitation amounts 
 
+`crashcount`: the number of fatalities per year due to water over-topping the bridge `river_height_data`: data with daily precipitation amounts
 
 ```{r}
 # Example: generate river height data 
@@ -77,11 +80,13 @@ river_height_data <- data.frame(
 )
 ```
 
-#### Parameters
+#### Parameters:
 
-#### Output
+Flood threshold (20 m), discount rate, construction daily cost, materials/labor costs
 
+#### Output:
 
+Printed comparison of Option1 vs Option 2 total costs
 
 ### Option 1: No Action (Keep Existing Bridge)
 
@@ -98,13 +103,34 @@ npv_format <- format(npv, big.mark = ",", scientific = FALSE)
 sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", npv_format)
 ```
 
+Inputs: annual fatalities Outputs: numeric NPV of fatality costs
+
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
+
 ```{r}
+# Module 1.2 - repair_cost()
+
+repair_cost <- function(river_height_data,
+                        flood_threshold = 20,
+                        cost_per_flood = 50000) { #default 50,000
+
+  flood_days <- 0  # counter for number of flood events
+
+  for (i in 1:nrow(river_height_data)) {
+    if (river_height_data$river_ht[i] > flood_threshold) {
+      flood_days <- flood_days + 1
+    }
+  }
+
+  total_repair <- flood_days * cost_per_flood
+
+  return(total_repair)
+}
 
 ```
 
-
 #### Total Cost of Option 1
+
 ```{r}
 #total_op1 = npv + repairs
 
@@ -113,22 +139,102 @@ sprintf("The total cost of fatalities from the existing bridge is estimated to b
 #sprintf("The total cost of no action is estimated at %n.", total_op1)
 ```
 
-
-
 ### Option 2: Construct New Bridge
 
 #### 2.1 Calculate the cost of Materials
 
+Inputs: river height data
+
+Outputs: total material costs in \$ for flood delays
+
+```{r}
+# Module 2.1
+
+material_cost <- function(river_height_data,
+                          base_material_cost = 2000000,
+                          flood_threshold = 20,
+                          cost_per_day = 10000) {
+
+  delay_days <- 0  # count construction delay days due to flooding
+
+  for (i in 1:nrow(river_height_data)) {
+    if (river_height_data$river_ht[i] > flood_threshold) {
+      delay_days <- delay_days + 1
+    }
+  }
+
+  total_material <- base_material_cost + (delay_days * delay_cost_per_day)
+
+  return(total_material)
+}
+```
+
 #### 2.2 Calculate the cost of Labor
+
+Input: river height data
+
+Output: total labor cost in dollars accounting for flood
+
+```{r}
+# Module 2.2
+
+labor_cost <- function(river_height_data,
+                       workers = 40,
+                       daily_wage = 350,
+                       flood_threshold = 20,
+                       work_days = 365) {
+
+  days_worked <- 0  # only count non-flood days as billable
+
+  for (i in 1:nrow(river_height_data)) {
+    if (river_height_data$river_ht[i] <= flood_threshold) {
+      days_worked <- days_worked + 1
+    }
+  }
+
+  # Workers are still paid on flood days (they can't work but are on contract)
+  total_labor <- workers * daily_wage * work_days
+
+  return(total_labor)
+}
+```
+
+workers - number of workers on site (\~40)
+
+daily_wage - daily wage per worker in dollars (\~\$350)
+
+flood_threshold - river height that halts work (\~20m)
+
+work_days - total planned construction workdays (\~365)
 
 #### Total Cost of Option 2
 
-
-
 ### Compare Option 1 vs Option 2
 
+```{r}
+# Module 3 - compare_costs()
+#   Input:  op1 & op2
+#   Output: cost comparison
+
+compare_costs <- function(op1, op2) {
+
+  op1_fmt <- format(round(op1), big.mark = ",", scientific = FALSE)
+  op2_fmt <- format(round(op2), big.mark = ",", scientific = FALSE)
+  diff    <- format(round(abs(op1 - op2)), big.mark = ",", scientific = FALSE)
+
+  cat("=== Bridge Cost Comparison ===\n")
+  cat(sprintf("Option 1 (No Action):    $%s\n", op1_fmt))
+  cat(sprintf("Option 2 (New Bridge):   $%s\n", op2_fmt))
+  cat("------------------------------\n")
+
+  if (op1 < op2) {
+    cat(sprintf("Recommendation: Keep existing bridge. Saves $%s.\n", diff))
+  } else {
+    cat(sprintf("Recommendation: Build new bridge. Saves $%s over time.\n", diff))
+  }
+}
+
+```
 
 
 ## Results
-
-
