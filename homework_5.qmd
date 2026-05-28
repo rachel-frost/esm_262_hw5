@@ -58,15 +58,15 @@ library(here)
 
 ## Program Contract *(add to this section as you build each function)*
 
-#### Inputs
+#### Program Inputs
 `crashcount`: the number of fatalities per year due to water overtopping the bridge
-
-`river_height_data`: data with daily precipitation amounts 
 
 `crashcount`: the number of fatalities per year due to water over-topping the bridge `river_height_data`: data with daily precipitation amounts
 
+`river_height_data`: data with daily precipitation amounts 
+
 ```{r}
-# Example: generate river height data 
+# Example of simulated river height data 
 
 # set seed for reproducibility
 set.seed(262)
@@ -83,13 +83,13 @@ river_height_data <- data.frame(
 )
 ```
 
-#### Parameters:
+#### Program Parameters:
 
 Flood threshold (20 m), discount rate, construction daily cost, materials/labor costs
 
-#### Output:
+#### Prorgram Output:
 
-Printed comparison of Option1 vs Option 2 total costs
+Printed comparison of the total costs of Option 1 vs Option 2 
 
 ### Option 1: No Action (Keep Existing Bridge)
 
@@ -106,7 +106,8 @@ npv_format <- format(npv, big.mark = ",", scientific = FALSE)
 sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", npv_format)
 ```
 
-Inputs: annual fatalities Outputs: numeric NPV of fatality costs
+Inputs: annual fatalities 
+Outputs: numeric NPV of fatality costs
 
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
 
