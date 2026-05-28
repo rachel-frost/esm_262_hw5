@@ -9,9 +9,9 @@
 #'
 # function definition
 bridge_repair_cost = function(floods, 
-                              costperflood = 1000000, 
-                              discount = 0.07,
-                              time = 30) {
+                              costperflood, 
+                              discount,
+                              time) {
   # calculate annual repair cost
   npv = ((floods * costperflood) / (1 + discount)**time)
   return(npv)

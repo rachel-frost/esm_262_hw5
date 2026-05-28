@@ -74,19 +74,30 @@ river_height_data <- data.frame(
 
 #### Program Parameters:
 
+Scenario-specific parameters can be changed for the entire program here:
 ``` {r}
-Flood threshold = 20 meters
+#discount rate to calculate Net Present Value (NPV)
+discount = 0.07
 
-Discount rate = 7% (use decimal value 0.07)
+#time period for evaluating NPV
+time = 30
 
-Construction daily cost = 
+#river height at which the bridge floods
+flood_threshold = 20
 
-Materials/labor costs = 
+# Current Value of a Statistical Life (VSL) from the U.S. Department of Transportation
+vsl = 7400000
+
+# estimated cost of repairs needed per flooding event ($USD)
+costperflood = 1000000
 ```
 
 #### Prorgram Output:
 
+`total_NPV_op1`: The total NPV of option 1
+`total_NPV_op1`: The total NPV of option 2
 Printed comparison of the total costs of Option 1 vs Option 2
+
 
 ### Option 1: No Action (Keep Existing Bridge)
 
@@ -97,7 +108,10 @@ source(here("R/fatal_cost.R"))
 
 # Instructions: enter the average number of fatalities per year below into the function "fatal_cost".
 # example below: 25 fatalities per year, on average
-fatal_NPV <- fatal_cost(crashcount)
+fatal_NPV <- fatal_cost(crashcount, 
+                        vsl = vsl, 
+                        discount = discount,
+                        time = time)
 print(fatal_NPV)
 
 fatal_npv_format <- format(fatal_NPV, big.mark = ",", scientific = FALSE)
@@ -136,10 +150,13 @@ print(paste("Estimate of Total flood events per year:", event_count))
 # Step 1.2.2 Use total flood events to calculate the total NPV of all future flooding events. 
 source(here("R/bridge_repair_cost.R"))
 
-bridge_repair_NPV <- bridge_repair_cost(floods = event_count, costperflood = 1000000, discount = 0.07, time = 30)
+bridge_repair_NPV <- bridge_repair_cost(floods = event_count, 
+                                        costperflood = costperflood, 
+                                        discount = discount, 
+                                        time = time)
 
 repair_npv_format <- format(bridge_repair_NPV, big.mark = ",", scientific = FALSE)
-sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", repair_npv_format)
+sprintf("The total cost of repairing the existing bridge is estimated to be $%s.", repair_npv_format)
 ```
 
 #### Total Cost of Option 1
@@ -226,14 +243,14 @@ work_days - total planned construction workdays (\~365)
 
 ```{r}
 # Module 3 - compare_costs()
-#   Input:  op1 & op2
+#   Input:  total_NPV_op1 & op2
 #   Output: cost comparison
 
-compare_costs <- function(op1, op2) {
+compare_costs <- function(total_NPV_op1, op2) {
 
-  op1_fmt <- format(round(op1), big.mark = ",", scientific = FALSE)
+  op1_fmt <- format(round(total_NPV_op1), big.mark = ",", scientific = FALSE)
   op2_fmt <- format(round(op2), big.mark = ",", scientific = FALSE)
-  diff    <- format(round(abs(op1 - op2)), big.mark = ",", scientific = FALSE)
+  diff    <- format(round(abs(total_NPV_op1 - op2)), big.mark = ",", scientific = FALSE)
 
   cat("=== Bridge Cost Comparison ===\n")
   cat(sprintf("Option 1 (No Action):    $%s\n", op1_fmt))
@@ -248,6 +265,5 @@ compare_costs <- function(op1, op2) {
 }
 
 ```
-
 
 ## Results
