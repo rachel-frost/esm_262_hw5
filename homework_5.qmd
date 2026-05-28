@@ -93,49 +93,57 @@ Printed comparison of the total costs of Option 1 vs Option 2
 
 ### Option 1: No Action (Keep Existing Bridge)
 
-#### 1.1 Calculate the cost of fatalities caused by flooding
+#### 1.1 Calculate the value of fatalities caused by flooding
 
 ```{r}
 source(here("R/fatal_cost.R"))
 
-# use function, and enter the number of annual fatalities below. 
-npv <- fatal_cost(100)
-print(npv)
+# Instructions: enter the average number of fatalities per year below into the function "fatal_cost".
+# example below: 25 fatalities per year, on average
+fatal_NPV <- fatal_cost(25)
+print(fatal_NPV)
 
-npv_format <- format(npv, big.mark = ",", scientific = FALSE)
-sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", npv_format)
+fatal_npv_format <- format(fatal_NPV, big.mark = ",", scientific = FALSE)
+sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", fatal_npv_format)
 ```
-
-Inputs: annual fatalities 
-Outputs: numeric NPV of fatality costs
 
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
 
 ```{r}
 # Module 1.2 - repair_cost()
 
-repair_cost <- function(river_height_data,
-                        flood_threshold = 20,
-                        cost_per_flood = 50000) { #default 50,000
 
-  flood_days <- 0  # counter for number of flood events
+# Initialize variables
+event_count <- 0
+in_event <- FALSE
 
-  for (i in 1:nrow(river_height_data)) {
-    if (river_height_data$river_ht[i] > flood_threshold) {
-      flood_days <- flood_days + 1
+for (i in 1:nrow(river_height_data)) {
+  
+  # Check if current day exceeds threshold
+  if (river_height_data$river_ht[i] > 20) {
+    
+    # If we are not already in an event, start a new one
+    if (!in_event) {
+      event_count <- event_count + 1
+      in_event <- TRUE
     }
+    
+  } else {
+    # If height drops below threshold, reset the in_event flag
+    in_event <- FALSE
   }
-
-  total_repair <- flood_days * cost_per_flood
-
-  return(total_repair)
 }
-# Based on river height data, calculate the number of flooding events per year.
 
-#initialization
+print(paste("Estimate of Total flood events per year:", event_count))
 
-river_height_data$flood = 0
 
+# Use total flood events estimate to calculate the total NPV of all future flooding events. 
+source(here("R/bridge_repair_cost.R"))
+
+bridge_repair_NPV <- bridge_repair_cost(floods = event_count, costperflood = 1000000, discount = 0.07, time = 30)
+
+repair_npv_format <- format(bridge_repair_NPV, big.mark = ",", scientific = FALSE)
+sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", repair_npv_format)
 ```
 
 #### Total Cost of Option 1
