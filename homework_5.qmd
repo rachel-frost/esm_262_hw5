@@ -96,7 +96,7 @@ Printed comparison of Option1 vs Option 2 total costs
 #### 1.1 Calculate the cost of fatalities caused by flooding
 
 ```{r}
-source(here("fatal_cost.R"))
+source(here("R/fatal_cost.R"))
 
 # use function, and enter the number of annual fatalities below. 
 npv <- fatal_cost(100)
