@@ -75,7 +75,7 @@ discount = 0.07
 #time period for evaluating NPV
 time = 30
 
-#river height at which the bridge floods
+#river height at which the bridge floods, and when construction work halts
 flood_threshold = 20
 
 # Current Value of a Statistical Life (VSL) from the U.S. Department of Transportation
@@ -83,9 +83,19 @@ vsl = 7400000
 
 # estimated cost of repairs needed per flooding event ($USD)
 costperflood = 1000000
+
+#number of workers on site 
+workers = 40
+
+#daily wage per worker in dollars
+daily_wage = 350
+
+#total planned construction workdays
+work_days = 365
+
 ```
 
-#### Prorgram Output:
+#### Program Output:
 
 `total_NPV_op1`: The total NPV of option 1 
 
@@ -192,7 +202,6 @@ source(here("compare_costs.R"))
 ```
 
 Inputs: river height data
-
 Outputs: total material costs in \$ for flood delays
 
 ```{r}
@@ -205,7 +214,6 @@ materials <- material_cost(river_height_data,
 #### 2.2 Calculate the cost of Labor
 
 Input: river height data
-
 Output: total labor cost in dollars accounting for flood
 
 ```{r}
@@ -215,13 +223,6 @@ labor <- labor_cost(river_height_data,
                     flood_threshold = flood_threshold) 
 ```
 
-workers - number of workers on site (\~40)
-
-daily_wage - daily wage per worker in dollars (\~\$350)
-
-flood_threshold - river height that halts work (\~20m)
-
-work_days - total planned construction workdays (\~365)
 
 #### Total Cost of Option 2
 ```{r}
@@ -251,4 +252,4 @@ cat(sprintf("Recommendation: %s. Saves $%s.\n",
 
 ## Results
 
-Based on the data provided, taking no action incurs approximately $16,762,355 less in costs over thirty years than replacing the bridge. 
+Based on the data provided, building a new brdige incurs approximately $16,762,355 less in costs over thirty years than no action. 
