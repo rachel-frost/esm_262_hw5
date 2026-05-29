@@ -1,30 +1,20 @@
 ---
-title: "Homework 5"
-author: "Rachel Frost & Alecia Dezzani"
+title: "Assignment 5 - Modularity"
+subtitle: "ESM 262"
+date: "May 28, 2026"
+author: "Alecia Dezzani & Rachel Frost"
 format: 
   html:
     embed-resources: true
 editor: visual
-theme: minty
+theme: cerulean
 ---
-
-# Notes (delete this section later)
-
-Ideas
-
-based on amount of precipitation, calculate the height of the water (goes into both options)
-
-costs for no action (old bridge) - accidents/fatalities - infrastructure damages as a function of precipitation - increased travel times due to rerouting when bridge closed
-
-costs for building new bridge - construction materials - construction labor - if there's too much rain, have to stop construction and delays cost X amount (for loop)
-
-final module - add modules of each option and print results
 
 ## Introduction
 
 The California Department of Fish and Wildlife (CDFW) and California Department of Transportation (Caltrans) is considering the replacement of the Sandia Creek Drive crossing with a new bridge by 2027 will reconnect over twelve miles of habitat along the Santa Margarita River for endangered Southern California Steelhead trout (Oncorhynchus mykiss irideus) in northern San Diego County. The Santa Margarita river would be the first perennially-flowing river in Southern California with no anadromous fish migration barriers in its mainstem. The new bridge would also improve emergency response access and evacuation reliability, as its proposed design can withstand a 100-year storm event without overtopping with flowing water.
 
-The agencies wish to compare costs of two options: no action (keeping the existing bridge) and constructing a new bridge. The option with the lowest cost will be chosen moving forward.
+This program helps agencies compare the costs of two options: no action (keeping the existing bridge) and constructing a new bridge. The option with the lowest cost will be chosen moving forward.
 
 The following program uses several modules to compare cost scenarios:
 
@@ -40,7 +30,7 @@ library(tidyverse)
 library(here)
 ```
 
-## Program Contract *(add to this section as you build each function)*
+## Program Contract
 
 #### Program Inputs
 `crashcount`: the number of fatalities per year due to water overtopping the bridge
@@ -53,8 +43,8 @@ crashcount = sample(10:30, 1, replace = TRUE)
 print(crashcount)
 ```
 `river_height_data`: data with daily precipitation amounts 
-
 ```{r}
+#| echo: false
 # Example of simulated river height data 
 
 # set seed for reproducibility
@@ -64,13 +54,12 @@ set.seed(262)
 changes <- sample(c(-1, 0, 1), 365, replace = TRUE)
 river_ht <- 8 + cumsum(changes) # Optimal river height is 8 meters, flooding when height > 20m
 
-print(river_ht)
-
 river_height_data <- data.frame(
   day = seq(1,365),
   river_ht
 )
 ```
+
 
 #### Program Parameters:
 
@@ -79,27 +68,29 @@ Scenario-specific parameters can be changed for the entire program here:
 #discount rate to calculate Net Present Value (NPV)
 discount = 0.07
 
-#time period for evaluating NPV
+#time period to calculate NPV
 time = 30
 
 #river height at which the bridge floods
 flood_threshold = 20
 
-# Current Value of a Statistical Life (VSL) from the U.S. Department of Transportation
+# Current Value of a Statistical Life (VSL) from the U.S. Department of Transportation ($ USD)
 vsl = 7400000
 
-# estimated cost of repairs needed per flooding event ($USD)
+# estimated cost of repairs needed per flooding event ($ USD)
 costperflood = 1000000
 ```
 
-#### Prorgram Output:
+#### Program Output:
 
 `total_NPV_op1`: The total NPV of option 1
-`total_NPV_op1`: The total NPV of option 2
-Printed comparison of the total costs of Option 1 vs Option 2
+
+`total_NPV_op2`: The total NPV of option 2
+
+Plus, a final comparison of the total costs of Option 1 vs Option 2
 
 
-### Option 1: No Action (Keep Existing Bridge)
+## Option 1: No Action (Keep Existing Bridge)
 
 #### 1.1 Calculate the value of fatalities caused by flooding
 
@@ -169,7 +160,7 @@ total_NPV_op1 <- format(total_NPV_op1, big.mark = ",", scientific = FALSE)
 sprintf("The total cost of no action is estimated at $%s.", total_NPV_op1)
 ```
 
-### Option 2: Construct New Bridge
+## Option 2: Construct New Bridge
 
 #### 2.1 Calculate the cost of Materials
 
@@ -239,10 +230,11 @@ work_days - total planned construction workdays (\~365)
 
 #### Total Cost of Option 2
 
-### Compare Option 1 vs Option 2
+
+## Compare Option 1 vs Option 2
 
 ```{r}
-# Module 3 - compare_costs()
+# Module 3 - Compare_costs()
 #   Input:  total_NPV_op1 & op2
 #   Output: cost comparison
 
@@ -266,4 +258,3 @@ compare_costs <- function(total_NPV_op1, op2) {
 
 ```
 
-## Results
