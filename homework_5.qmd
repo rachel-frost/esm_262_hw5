@@ -8,18 +8,6 @@ editor: visual
 theme: minty
 ---
 
-# Notes (delete this section later)
-
-Ideas
-
-based on amount of precipitation, calculate the height of the water (goes into both options)
-
-costs for no action (old bridge) - accidents/fatalities - infrastructure damages as a function of precipitation - increased travel times due to rerouting when bridge closed
-
-costs for building new bridge - construction materials - construction labor - if there's too much rain, have to stop construction and delays cost X amount (for loop)
-
-final module - add modules of each option and print results
-
 ## Introduction
 
 The California Department of Fish and Wildlife (CDFW) and California Department of Transportation (Caltrans) is considering the replacement of the Sandia Creek Drive crossing with a new bridge by 2027 will reconnect over twelve miles of habitat along the Santa Margarita River for endangered Southern California Steelhead trout (Oncorhynchus mykiss irideus) in northern San Diego County. The Santa Margarita river would be the first perennially-flowing river in Southern California with no anadromous fish migration barriers in its mainstem. The new bridge would also improve emergency response access and evacuation reliability, as its proposed design can withstand a 100-year storm event without overtopping with flowing water.
