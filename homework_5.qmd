@@ -1,31 +1,14 @@
 ---
 title: "Homework 5"
 author: "Rachel Frost & Alecia Dezzani"
-format: html
+format: 
+  html:
+    embed-resources: true
 editor: visual
 theme: minty
 ---
 
 # Notes (delete this section later)
-
-### Assignment 5
-
-With a partner, think of an example complex data science task/program that you might want to design with:
-
-- at least 4 modules
-- at least one for (or while) loop
-
-Planning - Step 1
-
-- sketch a diagram that shows how these modules would be put together to go from inputs to output for the overall program (30pts)
-- write a contract for the overall program (input, output, parameters) (10pts)
-- break the program into modules (naming them appropriately), write a contract for each one (20pts)
-
-Implementation - Step 2
-
-- write functions (stored in separate documents) for each module (30pts)
-- write an overall program that manages calls to each function (10pts)
-- create some data and use it to test the program (10pts)
 
 Ideas
 
@@ -52,22 +35,31 @@ knitr::include_graphics("flowchart.jpg")
 The following R packages are needed for this program:
 
 ```{r}
+#| message: false
 library(tidyverse)
 library(here)
 ```
 
 ## Program Contract *(add to this section as you build each function)*
 
+<<<<<<< HEAD
 #### Inputs
 
-`crashcount`: the number of fatalities per year due to water overtopping the bridge
+=======
+#### Program Inputs
+```{r}
+# Example of simulated fatality data 
 
-`river_height_data`: data with daily precipitation amounts
-
-`crashcount`: the number of fatalities per year due to water over-topping the bridge `river_height_data`: data with daily precipitation amounts
+#`river_height_data`: data with daily precipitation amounts
+# set seed for reproducibility
+set.seed(262)
+crashcount = sample(10:30, 1, replace = TRUE)
+print(crashcount)
+```
+`river_height_data`: data with daily precipitation amounts 
 
 ```{r}
-# Example: generate river height data 
+# Example of simulated river height data 
 
 # set seed for reproducibility
 set.seed(262)
@@ -84,27 +76,50 @@ river_height_data <- data.frame(
 )
 ```
 
-#### Parameters:
+#### Program Parameters:
 
-Flood threshold (20 m), discount rate, construction daily cost, materials/labor costs
+Scenario-specific parameters can be changed for the entire program here:
+``` {r}
+#discount rate to calculate Net Present Value (NPV)
+discount = 0.07
 
-#### Output:
+#time period for evaluating NPV
+time = 30
 
-Printed comparison of Option1 vs Option 2 total costs
+#river height at which the bridge floods
+flood_threshold = 20
+
+# Current Value of a Statistical Life (VSL) from the U.S. Department of Transportation
+vsl = 7400000
+
+# estimated cost of repairs needed per flooding event ($USD)
+costperflood = 1000000
+```
+
+#### Prorgram Output:
+
+`total_NPV_op1`: The total NPV of option 1
+`total_NPV_op1`: The total NPV of option 2
+Printed comparison of the total costs of Option 1 vs Option 2
+
 
 ### Option 1: No Action (Keep Existing Bridge)
 
-#### 1.1 Calculate the cost of fatalities caused by flooding
+#### 1.1 Calculate the value of fatalities caused by flooding
 
 ```{r}
-source(here("fatal_cost.R"))
+source(here("R/fatal_cost.R"))
 
-# use function, and enter the number of annual fatalities below. 
-npv <- fatal_cost(100)
-print(npv)
+# Instructions: enter the average number of fatalities per year below into the function "fatal_cost".
+# example below: 25 fatalities per year, on average
+fatal_NPV <- fatal_cost(crashcount, 
+                        vsl = vsl, 
+                        discount = discount,
+                        time = time)
+print(fatal_NPV)
 
-npv_format <- format(npv, big.mark = ",", scientific = FALSE)
-sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", npv_format)
+fatal_npv_format <- format(fatal_NPV, big.mark = ",", scientific = FALSE)
+sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", fatal_npv_format)
 ```
 Shared Module: count_flood_days
 ```{r}
@@ -129,45 +144,55 @@ count_flood_days <- function(river_height_data, flood_threshold = 20) {
 ```
 
 
-Inputs: annual fatalities Outputs: numeric NPV of fatality costs
-
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
 
 ```{r}
-# Module 1.2 - repair_cost()
+# Step 1.2.1 Use River Height Data to determine the number of flooding events per year
 
-repair_cost <- function(river_height_data,
-                        flood_threshold = 20,
-                        cost_per_flood = 50000) { #default 50,000
+# Initialize variables
+event_count <- 0
+in_event <- FALSE
 
-  flood_days <- 0  # counter for number of flood events
-
-  for (i in 1:nrow(river_height_data)) {
-    if (river_height_data$river_ht[i] > flood_threshold) {
-      flood_days <- flood_days + 1
+for (i in 1:nrow(river_height_data)) {
+  
+  # Check if current day exceeds threshold
+  if (river_height_data$river_ht[i] > 20) {
+    
+    # If we are not already in an event, start a new one
+    if (!in_event) {
+      event_count <- event_count + 1
+      in_event <- TRUE
     }
+    
+  } else {
+    # If height drops below threshold, reset the in_event flag
+    in_event <- FALSE
   }
-
-  total_repair <- flood_days * cost_per_flood
-
-  return(total_repair)
 }
-# Based on river height data, calculate the number of flooding events per year.
 
-#initialization
+print(paste("Estimate of Total flood events per year:", event_count))
 
-river_height_data$flood = 0
 
+# Step 1.2.2 Use total flood events to calculate the total NPV of all future flooding events. 
+source(here("R/bridge_repair_cost.R"))
+
+bridge_repair_NPV <- bridge_repair_cost(floods = event_count, 
+                                        costperflood = costperflood, 
+                                        discount = discount, 
+                                        time = time)
+
+repair_npv_format <- format(bridge_repair_NPV, big.mark = ",", scientific = FALSE)
+sprintf("The total cost of repairing the existing bridge is estimated to be $%s.", repair_npv_format)
 ```
 
 #### Total Cost of Option 1
 
 ```{r}
-#total_op1 = npv + repairs
+total_NPV_op1 = fatal_NPV + bridge_repair_NPV
 
-#print(total_op1)
+total_NPV_op1 <- format(total_NPV_op1, big.mark = ",", scientific = FALSE)
 
-#sprintf("The total cost of no action is estimated at %n.", total_op1)
+sprintf("The total cost of no action is estimated at $%s.", total_NPV_op1)
 ```
 
 ### Option 2: Construct New Bridge
@@ -235,13 +260,20 @@ compare_costs <- function(op1, op2) {
   
   diff <- abs(op1 - op2)
   
-  if (op1 < op2) {
-    recommendation <- "Keep existing bridge"
-    savings <- diff
-  } else {
-    recommendation <- "Build new bridge"
-    savings <- diff
-  }
+# Module 3 - compare_costs()
+#   Input:  total_NPV_op1 & op2
+#   Output: cost comparison
+
+compare_costs <- function(total_NPV_op1, op2) {
+
+  op1_fmt <- format(round(total_NPV_op1), big.mark = ",", scientific = FALSE)
+  op2_fmt <- format(round(op2), big.mark = ",", scientific = FALSE)
+  diff    <- format(round(abs(total_NPV_op1 - op2)), big.mark = ",", scientific = FALSE)
+
+  cat("=== Bridge Cost Comparison ===\n")
+  cat(sprintf("Option 1 (No Action):    $%s\n", op1_fmt))
+  cat(sprintf("Option 2 (New Bridge):   $%s\n", op2_fmt))
+  cat("------------------------------\n")
   
   return(list(
     option1_cost   = op1,
@@ -250,7 +282,7 @@ compare_costs <- function(op1, op2) {
     recommendation = recommendation,
     savings        = savings
   ))
-}
+}}
 
 ```
 
