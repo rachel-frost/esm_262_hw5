@@ -32,11 +32,15 @@ library(here)
 
 ## Program Contract
 
+<<<<<<< HEAD
+#### Inputs
+
+=======
 #### Program Inputs
-`crashcount`: the number of fatalities per year due to water overtopping the bridge
 ```{r}
 # Example of simulated fatality data 
 
+#`river_height_data`: data with daily precipitation amounts
 # set seed for reproducibility
 set.seed(262)
 crashcount = sample(10:30, 1, replace = TRUE)
@@ -108,6 +112,28 @@ print(fatal_NPV)
 fatal_npv_format <- format(fatal_NPV, big.mark = ",", scientific = FALSE)
 sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", fatal_npv_format)
 ```
+Shared Module: count_flood_days
+```{r}
+#load all modules
+# Load all modules
+source(here("count_flood_days.R"))   # shared module — must be sourced FIRST
+source(here("repair_cost.R"))        # depends on count_flood_days
+source(here("material_cost.R"))      # depends on count_flood_days
+source(here("labor_cost.R"))         # depends on count_flood_days
+source(here("compare_costs.R"))
+
+count_flood_days <- function(river_height_data, flood_threshold = 20) {
+  flood_days <- 0
+  for (i in 1:nrow(river_height_data)) {
+    if (river_height_data$river_ht[i] > flood_threshold) {
+      flood_days <- flood_days + 1
+    }
+  }
+  return(flood_days)
+}
+
+```
+
 
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
 
@@ -176,16 +202,8 @@ material_cost <- function(river_height_data,
                           flood_threshold = 20,
                           cost_per_day = 10000) {
 
-  delay_days <- 0  # count construction delay days due to flooding
-
-  for (i in 1:nrow(river_height_data)) {
-    if (river_height_data$river_ht[i] > flood_threshold) {
-      delay_days <- delay_days + 1
-    }
-  }
-
-  total_material <- base_material_cost + (delay_days * delay_cost_per_day)
-
+  delay_days <- count_flood_days(river_height_data, flood_threshold)  #shared module
+  total_material <- base_material_cost + (delay_days * cost_per_day)  
   return(total_material)
 }
 ```
@@ -205,17 +223,9 @@ labor_cost <- function(river_height_data,
                        flood_threshold = 20,
                        work_days = 365) {
 
-  days_worked <- 0  # only count non-flood days as billable
-
-  for (i in 1:nrow(river_height_data)) {
-    if (river_height_data$river_ht[i] <= flood_threshold) {
-      days_worked <- days_worked + 1
-    }
-  }
-
-  # Workers are still paid on flood days (they can't work but are on contract)
-  total_labor <- workers * daily_wage * work_days
-
+  flood_days <- count_flood_days(river_height_data, flood_threshold)  # calls shared module
+  non_flood_days <- work_days - flood_days
+  total_labor <- workers * daily_wage * non_flood_days
   return(total_labor)
 }
 ```
@@ -234,7 +244,19 @@ work_days - total planned construction workdays (\~365)
 ## Compare Option 1 vs Option 2
 
 ```{r}
+<<<<<<< HEAD
 # Module 3 - Compare_costs()
+=======
+#compare_costs()
+# Input:  op1 & op2
+# Output: cost comparison
+
+compare_costs <- function(op1, op2) {
+  
+  diff <- abs(op1 - op2)
+  
+# Module 3 - compare_costs()
+>>>>>>> 50f636148d85f369d634ec045ec8c832020a7f03
 #   Input:  total_NPV_op1 & op2
 #   Output: cost comparison
 
@@ -248,13 +270,15 @@ compare_costs <- function(total_NPV_op1, op2) {
   cat(sprintf("Option 1 (No Action):    $%s\n", op1_fmt))
   cat(sprintf("Option 2 (New Bridge):   $%s\n", op2_fmt))
   cat("------------------------------\n")
-
-  if (op1 < op2) {
-    cat(sprintf("Recommendation: Keep existing bridge. Saves $%s.\n", diff))
-  } else {
-    cat(sprintf("Recommendation: Build new bridge. Saves $%s over time.\n", diff))
-  }
-}
+  
+  return(list(
+    option1_cost   = op1,
+    option2_cost   = op2,
+    difference     = diff,
+    recommendation = recommendation,
+    savings        = savings
+  ))
+}}
 
 ```
 
