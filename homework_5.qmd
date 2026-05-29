@@ -1,18 +1,20 @@
 ---
-title: "Homework 5"
+title: "Assignment 5 - Modularity"
+subtitle: "ESM 262"
+date: "May 28, 2026"
 author: "Rachel Frost & Alecia Dezzani"
 format: 
   html:
     embed-resources: true
 editor: visual
-theme: minty
+theme: cerulean
 ---
 
 ## Introduction
 
 The California Department of Fish and Wildlife (CDFW) and California Department of Transportation (Caltrans) is considering the replacement of the Sandia Creek Drive crossing with a new bridge by 2027 will reconnect over twelve miles of habitat along the Santa Margarita River for endangered Southern California Steelhead trout (Oncorhynchus mykiss irideus) in northern San Diego County. The Santa Margarita river would be the first perennially-flowing river in Southern California with no anadromous fish migration barriers in its mainstem. The new bridge would also improve emergency response access and evacuation reliability, as its proposed design can withstand a 100-year storm event without overtopping with flowing water.
 
-The agencies wish to compare costs of two options: no action (keeping the existing bridge) and constructing a new bridge. The option with the lowest cost will be chosen moving forward.
+This program helps the agencies compare the costs of two options: (1) no action (keeping the existing bridge) and (2) constructing a new bridge. The option with the lowest cost will be chosen moving forward.
 
 The following program uses several modules to compare cost scenarios:
 
@@ -28,24 +30,14 @@ library(tidyverse)
 library(here)
 ```
 
-```{r}
-#load all modules
-source(here("count_flood_days.R"))   #shared module
-source(here("repair_cost.R"))        #depends on count_flood_days
-source(here("material_cost.R"))      #depends on count_flood_days
-source(here("labor_cost.R"))         #depends on count_flood_days
-source(here("compare_costs.R"))
-```
-## Program Contract *(add to this section as you build each function)*
-
-#### Inputs
+## Program Contract
 
 #### Program Inputs
 
+`crashcount`: the average number of fatalities per year due to the bridge flooding.
 ```{r}
 # Example of simulated fatality data 
 
-#`river_height_data`: data with daily precipitation amounts
 # set seed for reproducibility
 set.seed(262)
 crashcount = sample(10:30, 1, replace = TRUE)
@@ -95,9 +87,14 @@ costperflood = 1000000
 
 #### Prorgram Output:
 
-`total_NPV_op1`: The total NPV of option 1 `total_NPV_op1`: The total NPV of option 2 Printed comparison of the total costs of Option 1 vs Option 2
+`total_NPV_op1`: The total NPV of option 1 
 
-### Option 1: No Action (Keep Existing Bridge)
+`total_NPV_op2`: The total NPV of option 2 
+
+Finally, the comparison of the total costs of Option 1 vs Option 2.
+
+
+## Option 1: No Action (Keep Existing Bridge)
 
 #### 1.1 Calculate the value of fatalities caused by flooding
 
@@ -181,9 +178,18 @@ total_NPV_op1 = fatal_NPV + bridge_repair_NPV
 sprintf("The total cost of no action is estimated at $%s.", total_NPV_op1)
 ```
 
-### Option 2: Construct New Bridge
+## Option 2: Construct New Bridge
 
 #### 2.1 Calculate the cost of Materials
+
+```{r}
+#load all modules
+source(here("count_flood_days.R"))   #shared module
+source(here("repair_cost.R"))        #depends on count_flood_days
+source(here("material_cost.R"))      #depends on count_flood_days
+source(here("labor_cost.R"))         #depends on count_flood_days
+source(here("compare_costs.R"))
+```
 
 Inputs: river height data
 
@@ -217,6 +223,7 @@ flood_threshold - river height that halts work (\~20m)
 
 work_days - total planned construction workdays (\~365)
 
+#### Total Cost of Option 2
 ```{r}
 # Total Option 2
 total_NPV_op2 <- materials + labor  # keep as NUMBER, don't format yet
@@ -226,9 +233,7 @@ sprintf("The total cost of constructing a new bridge is estimated at $%s.",
 
 ```
 
-#### Total Cost of Option 2
-
-### Compare Option 1 vs Option 2
+## Compare Option 1 vs Option 2
 
 ```{r}
 #compare_costs()
@@ -245,3 +250,5 @@ cat(sprintf("Recommendation: %s. Saves $%s.\n",
 ```
 
 ## Results
+
+Based on the data provided, taking no action incurs approximately $16,762,355 less in costs over thirty years than replacing the bridge. 
