@@ -1,20 +1,30 @@
 ---
-title: "Assignment 5 - Modularity"
-subtitle: "ESM 262"
-date: "May 28, 2026"
-author: "Alecia Dezzani & Rachel Frost"
+title: "Homework 5"
+author: "Rachel Frost & Alecia Dezzani"
 format: 
   html:
     embed-resources: true
 editor: visual
-theme: cerulean
+theme: minty
 ---
+
+# Notes (delete this section later)
+
+Ideas
+
+based on amount of precipitation, calculate the height of the water (goes into both options)
+
+costs for no action (old bridge) - accidents/fatalities - infrastructure damages as a function of precipitation - increased travel times due to rerouting when bridge closed
+
+costs for building new bridge - construction materials - construction labor - if there's too much rain, have to stop construction and delays cost X amount (for loop)
+
+final module - add modules of each option and print results
 
 ## Introduction
 
 The California Department of Fish and Wildlife (CDFW) and California Department of Transportation (Caltrans) is considering the replacement of the Sandia Creek Drive crossing with a new bridge by 2027 will reconnect over twelve miles of habitat along the Santa Margarita River for endangered Southern California Steelhead trout (Oncorhynchus mykiss irideus) in northern San Diego County. The Santa Margarita river would be the first perennially-flowing river in Southern California with no anadromous fish migration barriers in its mainstem. The new bridge would also improve emergency response access and evacuation reliability, as its proposed design can withstand a 100-year storm event without overtopping with flowing water.
 
-This program helps agencies compare the costs of two options: no action (keeping the existing bridge) and constructing a new bridge. The option with the lowest cost will be chosen moving forward.
+The agencies wish to compare costs of two options: no action (keeping the existing bridge) and constructing a new bridge. The option with the lowest cost will be chosen moving forward.
 
 The following program uses several modules to compare cost scenarios:
 
@@ -30,9 +40,20 @@ library(tidyverse)
 library(here)
 ```
 
-## Program Contract
+```{r}
+#load all modules
+source(here("count_flood_days.R"))   #shared module
+source(here("repair_cost.R"))        #depends on count_flood_days
+source(here("material_cost.R"))      #depends on count_flood_days
+source(here("labor_cost.R"))         #depends on count_flood_days
+source(here("compare_costs.R"))
+```
+## Program Contract *(add to this section as you build each function)*
+
+#### Inputs
 
 #### Program Inputs
+
 ```{r}
 # Example of simulated fatality data 
 
@@ -43,9 +64,9 @@ crashcount = sample(10:30, 1, replace = TRUE)
 print(crashcount)
 ```
 
-`river_height_data`: data with daily precipitation amounts 
+`river_height_data`: data with daily precipitation amounts
+
 ```{r}
-#| echo: false
 # Example of simulated river height data 
 
 # set seed for reproducibility
@@ -55,43 +76,40 @@ set.seed(262)
 changes <- sample(c(-1, 0, 1), 365, replace = TRUE)
 river_ht <- 8 + cumsum(changes) # Optimal river height is 8 meters, flooding when height > 20m
 
+print(river_ht)
+
 river_height_data <- data.frame(
   day = seq(1,365),
   river_ht
 )
 ```
 
-
 #### Program Parameters:
 
 Scenario-specific parameters can be changed for the entire program here:
-``` {r}
+
+```{r}
 #discount rate to calculate Net Present Value (NPV)
 discount = 0.07
 
-#time period to calculate NPV
+#time period for evaluating NPV
 time = 30
 
 #river height at which the bridge floods
 flood_threshold = 20
 
-# Current Value of a Statistical Life (VSL) from the U.S. Department of Transportation ($ USD)
+# Current Value of a Statistical Life (VSL) from the U.S. Department of Transportation
 vsl = 7400000
 
-# estimated cost of repairs needed per flooding event ($ USD)
+# estimated cost of repairs needed per flooding event ($USD)
 costperflood = 1000000
 ```
 
-#### Program Output:
+#### Prorgram Output:
 
-`total_NPV_op1`: The total NPV of option 1
+`total_NPV_op1`: The total NPV of option 1 `total_NPV_op1`: The total NPV of option 2 Printed comparison of the total costs of Option 1 vs Option 2
 
-`total_NPV_op2`: The total NPV of option 2
-
-Plus, a final comparison of the total costs of Option 1 vs Option 2
-
-
-## Option 1: No Action (Keep Existing Bridge)
+### Option 1: No Action (Keep Existing Bridge)
 
 #### 1.1 Calculate the value of fatalities caused by flooding
 
@@ -111,14 +129,8 @@ sprintf("The total cost of fatalities from the existing bridge is estimated to b
 ```
 
 Shared Module: count_flood_days
+
 ```{r}
-#load all modules
-# Load all modules
-source(here("count_flood_days.R"))   # shared module — must be sourced FIRST
-source(here("repair_cost.R"))        # depends on count_flood_days
-source(here("material_cost.R"))      # depends on count_flood_days
-source(here("labor_cost.R"))         # depends on count_flood_days
-source(here("compare_costs.R"))
 
 count_flood_days <- function(river_height_data, flood_threshold = 20) {
   flood_days <- 0
@@ -131,7 +143,6 @@ count_flood_days <- function(river_height_data, flood_threshold = 20) {
 }
 
 ```
-
 
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
 
@@ -179,12 +190,10 @@ sprintf("The total cost of repairing the existing bridge is estimated to be $%s.
 ```{r}
 total_NPV_op1 = fatal_NPV + bridge_repair_NPV
 
-total_NPV_op1 <- format(total_NPV_op1, big.mark = ",", scientific = FALSE)
-
 sprintf("The total cost of no action is estimated at $%s.", total_NPV_op1)
 ```
 
-## Option 2: Construct New Bridge
+### Option 2: Construct New Bridge
 
 #### 2.1 Calculate the cost of Materials
 
@@ -195,15 +204,8 @@ Outputs: total material costs in \$ for flood delays
 ```{r}
 # Module 2.1
 
-material_cost <- function(river_height_data,
-                          base_material_cost = 2000000,
-                          flood_threshold = 20,
-                          cost_per_day = 10000) {
-
-  delay_days <- count_flood_days(river_height_data, flood_threshold)  #shared module
-  total_material <- base_material_cost + (delay_days * cost_per_day)  
-  return(total_material)
-}
+materials <- material_cost(river_height_data,
+                           flood_threshold = flood_threshold)
 ```
 
 #### 2.2 Calculate the cost of Labor
@@ -215,17 +217,8 @@ Output: total labor cost in dollars accounting for flood
 ```{r}
 # Module 2.2
 
-labor_cost <- function(river_height_data,
-                       workers = 40,
-                       daily_wage = 350,
-                       flood_threshold = 20,
-                       work_days = 365) {
-
-  flood_days <- count_flood_days(river_height_data, flood_threshold)  # calls shared module
-  non_flood_days <- work_days - flood_days
-  total_labor <- workers * daily_wage * non_flood_days
-  return(total_labor)
-}
+labor <- labor_cost(river_height_data,
+                    flood_threshold = flood_threshold) 
 ```
 
 workers - number of workers on site (\~40)
@@ -236,47 +229,31 @@ flood_threshold - river height that halts work (\~20m)
 
 work_days - total planned construction workdays (\~365)
 
-#### Total Cost of Option 2
-
-
-## Compare Option 1 vs Option 2
-
 ```{r}
-<<<<<<< HEAD
-# Module 3 - Compare_costs()
-=======
-#compare_costs()
-# Input:  op1 & op2
-# Output: cost comparison
+# Total Option 2
+total_NPV_op2 <- materials + labor  # keep as NUMBER, don't format yet
 
-compare_costs <- function(op1, op2) {
-  
-  diff <- abs(op1 - op2)
-  
-# Module 3 - compare_costs()
->>>>>>> 50f636148d85f369d634ec045ec8c832020a7f03
-#   Input:  total_NPV_op1 & op2
-#   Output: cost comparison
-
-compare_costs <- function(total_NPV_op1, op2) {
-
-  op1_fmt <- format(round(total_NPV_op1), big.mark = ",", scientific = FALSE)
-  op2_fmt <- format(round(op2), big.mark = ",", scientific = FALSE)
-  diff    <- format(round(abs(total_NPV_op1 - op2)), big.mark = ",", scientific = FALSE)
-
-  cat("=== Bridge Cost Comparison ===\n")
-  cat(sprintf("Option 1 (No Action):    $%s\n", op1_fmt))
-  cat(sprintf("Option 2 (New Bridge):   $%s\n", op2_fmt))
-  cat("------------------------------\n")
-  
-  return(list(
-    option1_cost   = op1,
-    option2_cost   = op2,
-    difference     = diff,
-    recommendation = recommendation,
-    savings        = savings
-  ))
-}}
+sprintf("The total cost of constructing a new bridge is estimated at $%s.",
+        format(round(total_NPV_op2), big.mark = ","))
 
 ```
 
+#### Total Cost of Option 2
+
+### Compare Option 1 vs Option 2
+
+```{r}
+#compare_costs()
+result <- compare_costs(total_NPV_op1, total_NPV_op2)
+
+cat("=== Bridge Cost Comparison ===\n")
+cat(sprintf("Option 1 (No Action):  $%s\n",
+            format(round(result$option1_cost), big.mark = ",")))
+cat(sprintf("Option 2 (New Bridge): $%s\n",
+            format(round(result$option2_cost), big.mark = ",")))
+cat(sprintf("Recommendation: %s. Saves $%s.\n",
+            result$recommendation,
+            format(round(result$savings), big.mark = ",")))
+```
+
+## Results
