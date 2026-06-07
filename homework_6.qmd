@@ -32,6 +32,10 @@ library(tidyverse)
 library(here)
 library(devtools)
 library(testthat)
+
+#For homework 6 
+install.packages("testthat")
+library(testthat)
 ```
 
 ## Program Contract
@@ -101,6 +105,7 @@ work_days = 365
 ```
 
 #### Program Output:
+
 `event_count`: The total number of flooding events per year
 
 `total_NPV_op1`: The total NPV of option 1
@@ -108,7 +113,6 @@ work_days = 365
 `total_NPV_op2`: The total NPV of option 2
 
 Finally, the comparison of the total costs of Option 1 vs Option 2.
-
 
 ## Option 1: No Action (Keep Existing Bridge)
 
@@ -245,4 +249,3 @@ Based on the data provided, building a new bridge incurs approximately \$16,762,
 #| echo: false
 knitr::include_graphics("images/bridge.png")
 ```
-
