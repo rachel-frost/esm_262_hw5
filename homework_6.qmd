@@ -32,10 +32,6 @@ library(tidyverse)
 library(here)
 library(devtools)
 library(testthat)
-
-#For homework 6 
-install.packages("testthat")
-library(testthat)
 ```
 
 ## Program Contract
@@ -201,6 +197,16 @@ Inputs: river height data Outputs: total material costs in \$ for flood delays
 
 materials <- material_cost(river_height_data,
                            flood_threshold = flood_threshold)
+
+#update for assignment 6
+#example use of material_cost
+example_data <- data.frame(
+  day = 1:10,
+  river_ht = c(25, 25, 25, 5, 5, 5, 5, 5, 5, 5)
+)
+
+material_cost(example_data, base_material_cost = 2000000, 
+              flood_threshold = 20, cost_per_day = 10000)
 ```
 
 #### 2.2 Calculate the cost of Labor

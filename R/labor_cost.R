@@ -1,3 +1,5 @@
+source("R/count_flood_days.R")
+
 labor_cost <- function(river_height_data,
                        workers = 40,
                        daily_wage = 350,
