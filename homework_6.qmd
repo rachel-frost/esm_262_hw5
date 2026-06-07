@@ -1,7 +1,7 @@
 ---
-title: "Assignment 5 - Modularity"
+title: "Assignment 6 - Testing and Documentation"
 subtitle: "ESM 262"
-date: "May 28, 2026"
+date: "June 8, 2026"
 author: "Rachel Frost & Alecia Dezzani"
 format: 
   html:
@@ -35,6 +35,7 @@ library(here)
 #### Program Inputs
 
 `crashcount`: the average number of fatalities per year due to the bridge flooding.
+
 ```{r}
 # Example of simulated fatality data 
 
@@ -97,12 +98,11 @@ work_days = 365
 
 #### Program Output:
 
-`total_NPV_op1`: The total NPV of option 1 
+`total_NPV_op1`: The total NPV of option 1
 
-`total_NPV_op2`: The total NPV of option 2 
+`total_NPV_op2`: The total NPV of option 2
 
 Finally, the comparison of the total costs of Option 1 vs Option 2.
-
 
 ## Option 1: No Action (Keep Existing Bridge)
 
@@ -201,8 +201,7 @@ source(here("R/labor_cost.R"))         #depends on count_flood_days
 source(here("R/compare_costs.R"))
 ```
 
-Inputs: river height data
-Outputs: total material costs in \$ for flood delays
+Inputs: river height data Outputs: total material costs in \$ for flood delays
 
 ```{r}
 # Module 2.1
@@ -213,8 +212,7 @@ materials <- material_cost(river_height_data,
 
 #### 2.2 Calculate the cost of Labor
 
-Input: river height data
-Output: total labor cost in dollars accounting for flood
+Input: river height data Output: total labor cost in dollars accounting for flood
 
 ```{r}
 # Module 2.2
@@ -223,8 +221,8 @@ labor <- labor_cost(river_height_data,
                     flood_threshold = flood_threshold) 
 ```
 
-
 #### Total Cost of Option 2
+
 ```{r}
 # Total Option 2
 total_NPV_op2 <- materials + labor  # keep as NUMBER, don't format yet
@@ -252,4 +250,4 @@ cat(sprintf("Recommendation: %s. Saves $%s.\n",
 
 ## Results
 
-Based on the data provided, building a new brdige incurs approximately $16,762,355 less in costs over thirty years than no action. 
+Based on the data provided, building a new brdige incurs approximately \$16,762,355 less in costs over thirty years than no action.
