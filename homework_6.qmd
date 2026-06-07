@@ -12,22 +12,26 @@ theme: cerulean
 
 ## Introduction
 
-The California Department of Fish and Wildlife (CDFW) and California Department of Transportation (Caltrans) is considering the replacement of the Sandia Creek Drive crossing with a new bridge by 2027 will reconnect over twelve miles of habitat along the Santa Margarita River for endangered Southern California Steelhead trout (Oncorhynchus mykiss irideus) in northern San Diego County. The Santa Margarita river would be the first perennially-flowing river in Southern California with no anadromous fish migration barriers in its mainstem. The new bridge would also improve emergency response access and evacuation reliability, as its proposed design can withstand a 100-year storm event without overtopping with flowing water.
+The California Department of Fish and Wildlife (CDFW) and California Department of Transportation (Caltrans) is considering the replacement of the Sandia Creek Drive crossing with a new bridge by 2027 will reconnect over twelve miles of habitat along the Santa Margarita River for endangered Southern California Steelhead trout (*Oncorhynchus mykiss irideus*) in northern San Diego County. The Santa Margarita river would be the first perennially-flowing river in Southern California with no anadromous fish migration barriers in its mainstem. The new bridge would also improve emergency response access and evacuation reliability, as its proposed design can withstand a 100-year storm event without overtopping with flowing water.
 
 This program helps the agencies compare the costs of two options: (1) no action (keeping the existing bridge) and (2) constructing a new bridge. The option with the lowest cost will be chosen moving forward.
 
 The following program uses several modules to compare cost scenarios:
 
 ```{r}
-knitr::include_graphics("flowchart.jpg")
+#| echo: false
+knitr::include_graphics("images/flowchart.jpg")
 ```
 
 The following R packages are needed for this program:
 
 ```{r}
 #| message: false
+#| warning: false
 library(tidyverse)
 library(here)
+library(devtools)
+library(testthat)
 ```
 
 ## Program Contract
@@ -67,7 +71,7 @@ river_height_data <- data.frame(
 
 #### Program Parameters:
 
-Scenario-specific parameters can be changed for the entire program here:
+**Scenario-specific parameters can be changed for the entire program here:**
 
 ```{r}
 #discount rate to calculate Net Present Value (NPV)
@@ -97,12 +101,14 @@ work_days = 365
 ```
 
 #### Program Output:
+`event_count`: The total number of flooding events per year
 
 `total_NPV_op1`: The total NPV of option 1
 
 `total_NPV_op2`: The total NPV of option 2
 
 Finally, the comparison of the total costs of Option 1 vs Option 2.
+
 
 ## Option 1: No Action (Keep Existing Bridge)
 
@@ -120,23 +126,7 @@ fatal_NPV <- fatal_cost(crashcount,
 print(fatal_NPV)
 
 fatal_npv_format <- format(fatal_NPV, big.mark = ",", scientific = FALSE)
-sprintf("The total cost of fatalities from the existing bridge is estimated to be $%s.", fatal_npv_format)
-```
-
-Shared Module: count_flood_days
-
-```{r}
-
-count_flood_days <- function(river_height_data, flood_threshold = 20) {
-  flood_days <- 0
-  for (i in 1:nrow(river_height_data)) {
-    if (river_height_data$river_ht[i] > flood_threshold) {
-      flood_days <- flood_days + 1
-    }
-  }
-  return(flood_days)
-}
-
+sprintf("The cost of fatalities from the existing bridge is estimated to be $%s.", fatal_npv_format)
 ```
 
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
@@ -177,7 +167,7 @@ bridge_repair_NPV <- bridge_repair_cost(floods = event_count,
                                         time = time)
 
 repair_npv_format <- format(bridge_repair_NPV, big.mark = ",", scientific = FALSE)
-sprintf("The total cost of repairing the existing bridge is estimated to be $%s.", repair_npv_format)
+sprintf("The cost of repairing the existing bridge is estimated to be $%s.", repair_npv_format)
 ```
 
 #### Total Cost of Option 1
@@ -194,7 +184,6 @@ sprintf("The total cost of no action is estimated at $%s.", total_NPV_op1)
 
 ```{r}
 #load all modules
-source(here("R/count_flood_days.R"))   #shared module
 source(here("R/repair_cost.R"))        #depends on count_flood_days
 source(here("R/material_cost.R"))      #depends on count_flood_days
 source(here("R/labor_cost.R"))         #depends on count_flood_days
@@ -243,11 +232,17 @@ cat(sprintf("Option 1 (No Action):  $%s\n",
             format(round(result$option1_cost), big.mark = ",")))
 cat(sprintf("Option 2 (New Bridge): $%s\n",
             format(round(result$option2_cost), big.mark = ",")))
-cat(sprintf("Recommendation: %s. Saves $%s.\n",
+cat(sprintf("Recommendation: %s. This will save $%s.\n",
             result$recommendation,
             format(round(result$savings), big.mark = ",")))
 ```
 
 ## Results
 
-Based on the data provided, building a new brdige incurs approximately \$16,762,355 less in costs over thirty years than no action.
+Based on the data provided, building a new bridge incurs approximately \$16,762,355 less in costs over thirty years than no action.
+
+```{r}
+#| echo: false
+knitr::include_graphics("images/bridge.png")
+```
+
