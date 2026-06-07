@@ -19,7 +19,7 @@ This program helps the agencies compare the costs of two options: (1) no action 
 The following program uses several modules to compare cost scenarios:
 
 ```{r}
-knitr::include_graphics("flowchart.jpg")
+knitr::include_graphics("images/flowchart.jpg")
 ```
 
 The following R packages are needed for this program:
