@@ -2,20 +2,6 @@
 #Inputs: river height data frame, base_material_cost, flood_threshold, cost_per_day
 #Outputs: total material cost (numeric)
 ###################################
-
-library(testthat)
-library(here)
-source(here("R/count_flood_days.R"))
-source(here("R/material_cost.R"))
-
-# Pre-define test inputs
-#base_cost    <- 2000000
-#cost_per_day <- 10000
-#threshold    <- 20
-
-#test_no_flood <- data.frame(day = 1:10, river_ht = rep(5, 10))
-#test_flood    <- data.frame(day = 1:10, river_ht = c(5, 5, 25, 25, 25, 5, 5, 5, 5, 5))  # 3 flood days
-
 test_that("material_cost works correctly", {
   
   #Expectation 1: Manual math check

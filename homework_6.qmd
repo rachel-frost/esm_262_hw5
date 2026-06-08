@@ -221,13 +221,6 @@ labor <- labor_cost(river_height_data,
                     flood_threshold = flood_threshold) 
 ```
 
-### Test Functions
-```{r}
-#test functions "test_labor_cost" and "test_material_costs"
-test_active_file("tests/test_labor_cost.R")
-test_file("tests/test_material_cost.R")
-```
-
 
 #### Total Cost of Option 2
 
