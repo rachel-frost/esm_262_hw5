@@ -75,28 +75,28 @@ river_height_data <- data.frame(
 **Scenario-specific parameters can be changed for the entire program here:**
 
 ```{r}
-#discount rate to calculate Net Present Value (NPV)
+# Discount rate to calculate Net Present Value (NPV)
 discount = 0.07
 
-#time period for evaluating NPV (years)
+# Time period for evaluating NPV (years)
 time = 30
 
-#river height at which the bridge floods, and when construction work halts
+# River height at which the bridge floods, and when construction work halts
 flood_threshold = 20
 
 # Current Value of a Statistical Life (VSL) from the U.S. Department of Transportation
 vsl = 7400000
 
-# estimated cost of repairs needed per flooding event ($USD)
+# Estimated cost of repairs needed per flooding event ($USD)
 costperflood = 1000000
 
-#number of workers on site 
+# Number of workers on site 
 workers = 40
 
-#daily wage per worker in dollars
+# Daily wage per worker in dollars
 daily_wage = 350
 
-#total planned construction workdays
+# Total planned construction workdays
 work_days = 365
 
 ```
@@ -120,7 +120,7 @@ source(here("R/fatal_cost.R"))
 
 # Instructions: enter the average number of fatalities per year below into the function "fatal_cost".
 # example below: 25 fatalities per year, on average
-fatal_NPV <- fatal_cost(crashcount=crashcount, 
+fatal_NPV <- fatal_cost(crashcount = crashcount, 
                         vsl = vsl, 
                         discount = discount,
                         time = time)
@@ -161,7 +161,7 @@ for (i in 1:nrow(river_height_data)) {
   }
 }
 
-print(paste("Estimate of Total flood events per year:", event_count))
+print(paste("Estimate of average flood events per year:", event_count))
 
 
 # Step 1.2.2 Use total flood events to calculate the total NPV of all future flooding events. 
@@ -191,8 +191,6 @@ sprintf("The total cost of no action is estimated at $%s.", total_NPV_op1)
 
 ## Option 2: Construct New Bridge
 
-#### 2.1 Calculate the cost of Materials
-
 ```{r}
 #load all modules
 source(here("R/repair_cost.R"))        #depends on count_flood_days
@@ -201,7 +199,9 @@ source(here("R/labor_cost.R"))         #depends on count_flood_days
 source(here("R/compare_costs.R"))
 ```
 
-Inputs: river height data Outputs: total material costs in \$ for flood delays
+#### 2.1 Calculate the cost of Materials
+Inputs: river height data 
+Outputs: total material costs in \$ for flood delays
 
 ```{r}
 # Module 2.1
@@ -221,8 +221,8 @@ material_cost(example_data, base_material_cost = 2000000,
 ```
 
 #### 2.2 Calculate the cost of Labor
-
-Input: river height data Output: total labor cost in dollars accounting for flood
+Input: river height data 
+Output: total labor cost in dollars accounting for flood
 
 ```{r}
 # Module 2.2
@@ -269,7 +269,6 @@ knitr::include_graphics("images/bridge.png")
 
 ## Appendix
 For help with functions used in this program:
-
 ```{r}
 #usethis::create_package(getwd())
 ```
@@ -278,8 +277,8 @@ For help with functions used in this program:
 #| message: false
 #| warning: false
 #| error: false
-devtools::load_all()
-document()
+#devtools::load_all()
+#document()
 
 #insert any function name below for its Help Page:
 help(fatal_cost) 
