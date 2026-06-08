@@ -267,11 +267,3 @@ Based on the data provided, building a new bridge incurs approximately \$16,762,
 knitr::include_graphics("images/bridge.png")
 ```
 
-## Appendix
-
-Create function documentation
-```{r}
-document()
-help("fatal_cost") #insert any function name here for help page.
-```
-
