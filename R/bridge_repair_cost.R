@@ -6,8 +6,7 @@
 #' @param discount discount rate (no unit) default = 7%
 #' @param time number of years evaluation default = 30 years
 #' @return npv (USD) net present value
-#'
-# function definition
+
 bridge_repair_cost = function(floods, 
                               costperflood, 
                               discount,
