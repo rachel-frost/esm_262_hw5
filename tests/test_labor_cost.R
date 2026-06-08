@@ -1,4 +1,3 @@
-
 test_that("labor_cost calculates correctly", {
   
   #Expectation 1: Manual check for no flooding

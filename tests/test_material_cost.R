@@ -41,6 +41,4 @@ test_that("material_cost works correctly", {
                              base_material_cost = base_cost,
                              flood_threshold = threshold,
                              cost_per_day = cost_per_day)
-  expect_equal(no_floods, base_cost)
-  
-})
+  expect_equal(no_floods, base_cost) })
