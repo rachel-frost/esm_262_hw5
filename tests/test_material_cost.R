@@ -2,6 +2,15 @@
 ###################################
 test_that("material_cost works", {
   
+  # Define what isn't in .qmd
+  threshold     <- 20  
+  base_cost     <- 2000000
+  cost_per_day  <- 10000
+  test_flood    <- data.frame(day = 1:10,
+                              river_ht = c(25, 25, 25, 5, 5, 5, 5, 5, 5, 5))
+  test_no_flood <- data.frame(day = 1:10,
+                              river_ht = c(5, 5, 5, 5, 5, 5, 5, 5, 5, 5))
+  
   #Expectation 1: Manual math check
   expected <- base_cost + (3 * cost_per_day)  # 3 flood days
   actual <- material_cost(test_flood,

@@ -1,5 +1,12 @@
 test_that("labor_cost calculates correctly", {
   
+  # Define non qmd variables 
+  threshold     <- 20
+  test_flood    <- data.frame(day = 1:10,
+                              river_ht = c(25, 25, 25, 5, 5, 5, 5, 5, 5, 5))
+  test_no_flood <- data.frame(day = 1:10,
+                              river_ht = c(5, 5, 5, 5, 5, 5, 5, 5, 5, 5))
+  
   #Expectation 1: Manual check for no flooding
   expected_no_flood <- workers * daily_wage * work_days  # 40 * 350 * 365 = 5,110,000
   actual_no_flood <- labor_cost(test_no_flood,

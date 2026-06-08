@@ -274,8 +274,8 @@ document()
 #insert any function name below for its Help Page:
 help(fatal_cost) 
 ```
-## Testing
 
+## Testing
 Run Function Tests:
 ```{r}
 test_dir("tests")
