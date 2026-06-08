@@ -20,3 +20,4 @@ fatal_cost = function(crashcount,
   npv = ((crashcount * vsl) / (1 + discount)**time) 
   return(npv)
 }
+
