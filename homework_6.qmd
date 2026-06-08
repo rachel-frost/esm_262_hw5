@@ -130,11 +130,6 @@ fatal_npv_format <- format(fatal_NPV, big.mark = ",", scientific = FALSE)
 sprintf("The cost of fatalities from the existing bridge is estimated to be $%s.", fatal_npv_format)
 ```
 
-```{r}
-#test function "fatal_cost" in the background
-test_file(here("tests/test_fatal_cost.R"))
-```
-
 #### 1.2 Calculate the cost of bridge repairs caused by flooding
 
 ```{r}
@@ -174,11 +169,6 @@ bridge_repair_NPV <- bridge_repair_cost(floods = event_count,
 
 repair_npv_format <- format(bridge_repair_NPV, big.mark = ",", scientific = FALSE)
 sprintf("The cost of repairing the existing bridge is estimated to be $%s.", repair_npv_format)
-```
-
-```{r}
-#test function "bridge_repair" in the background
-test_file(here("tests/test_bridge_repair_cost.R"))
 ```
 
 #### Total Cost of Option 1
@@ -267,7 +257,7 @@ Based on the data provided, building a new bridge incurs approximately \$16,762,
 knitr::include_graphics("images/bridge.png")
 ```
 
-## Appendix
+## Documentation
 For help with functions used in this program:
 ```{r}
 #usethis::create_package(getwd())
@@ -277,10 +267,16 @@ For help with functions used in this program:
 #| message: false
 #| warning: false
 #| error: false
-#devtools::load_all()
-#document()
+devtools::load_all()
+document()
 
 #insert any function name below for its Help Page:
 help(fatal_cost) 
+```
+## Testing
+
+Run Function Tests:
+```{r}
+test_dir("tests")
 ```
 
