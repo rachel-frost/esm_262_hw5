@@ -1,18 +1,18 @@
-#Calculate total material cost for bridge construction
+#' Calculate total material cost for bridge construction
 #'
-#' @description Calculates the total material cost of bridge construction,
+#' @name material_cost calculates the total material cost of bridge construction,
 #' accounting for delays caused by flooding events.
 #'
-#' @param river_height_data A data frame with columns `day` and `river_ht` 
+#' @param river_height_data A data frame with columns `day` and `river_ht`
 #' containing daily river height measurements in meters.
-#' @param base_material_cost Numeric. The baseline material cost in dollars. 
+#' @param base_material_cost Numeric. The baseline material cost in dollars.
 #' Default is 2000000.
-#' @param flood_threshold Numeric. The river height in meters at which flooding 
+#' @param flood_threshold Numeric. The river height in meters at which flooding
 #' occurs and construction halts. Default is 20.
-#' @param cost_per_day Numeric. The additional material cost per flood delay 
+#' @param cost_per_day Numeric. The additional material cost per flood delay
 #' day in dollars. Default is 10000.
 #'
-#' @return numeric. The total material cost in dollars, including base cost 
+#' @return numeric. The total material cost in dollars, including base cost
 #' plus costs from flood delays.
 #'
 #' @examples
@@ -25,7 +25,7 @@ material_cost <- function(river_height_data,
                           base_material_cost = 2000000,
                           flood_threshold = 20,
                           cost_per_day = 10000) {
-  
+
   delay_days <- count_flood_days(river_height_data, flood_threshold)
   total_material <- base_material_cost + (delay_days * cost_per_day)
   return(total_material)
