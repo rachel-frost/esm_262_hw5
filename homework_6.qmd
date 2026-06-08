@@ -273,10 +273,11 @@ For help with functions used in this program:
 #| message: false
 #| warning: false
 #| error: false
-devtools::install_github("aleciadezzani/hw6") 
-library(hw6)
+#devtools::install_github("aleciadezzani/hw6") 
+#library(hw6)
 
 #insert any function name below for its Help Page
-help(fatal_cost) 
+#help(fatal_cost) 
 ```
+
 
