@@ -1,47 +1,32 @@
-#testing labor cost function 
-#Inputs: 
-#Outputs: 
-#Author: Rachel Frost
 
-###################################
-
-#install packages and load libraries 
-install.packages("roxygen2")
-install.packages("devtools")
-library(roxygen2)
-library(devtools)
-
-
-#test
-
-test_that("labor_cost_works", {
+test_that("labor_cost calculates correctly", {
   
-  test_data_no_flood <- data.frame(
-    day = seq(1, 10),
-    river_ht = rep(5, 10)  # no flooding
-  )
+  #Expectation 1: Manual check for no flooding
+  expected_no_flood <- workers * daily_wage * work_days  # 40 * 350 * 365 = 5,110,000
+  actual_no_flood <- labor_cost(test_no_flood,
+                                workers = workers,
+                                daily_wage = daily_wage,
+                                flood_threshold = threshold,
+                                work_days = work_days)
+  expect_equal(actual_no_flood, expected_no_flood)
   
-  test_data_with_flood <- data.frame(
-    day = seq(1, 10),
-    river_ht = c(25, 25, 25, 5, 5, 5, 5, 5, 5, 5)  # 3 flood days
-  )
+  #Expectation 2: Manual math check for 3 flood days
+  expected_flood <- workers * daily_wage * (work_days - 3)  # 40 * 350 * 362 = 5,068,000
+  actual_flood <- labor_cost(test_flood,
+                             workers = workers,
+                             daily_wage = daily_wage,
+                             flood_threshold = threshold,
+                             work_days = work_days)
+  expect_equal(actual_flood, expected_flood)
   
-  # No flooding: workers * daily_wage * work_days
-  expect_equal(labor_cost(test_data_no_flood, workers = 40, daily_wage = 350, 
-                          flood_threshold = 20, work_days = 365), 5110000)
-  
-  # 3 flood days: workers * daily_wage * (work_days - 3)
-  expect_equal(labor_cost(test_data_with_flood, workers = 40, daily_wage = 350,
-                          flood_threshold = 20, work_days = 365), 5068000)
-  
-})
-
-test_that("labor_cost_decreases_with_more_floods", {
-  
-  few_floods <- data.frame(day = 1:10, river_ht = c(25, 5, 5, 5, 5, 5, 5, 5, 5, 5))
+  #Expectation 3: Scale check — more floods = lower labor cost
+  few_floods  <- data.frame(day = 1:10, river_ht = c(25, 5, 5, 5, 5, 5, 5, 5, 5, 5))
   many_floods <- data.frame(day = 1:10, river_ht = c(25, 25, 25, 25, 25, 5, 5, 5, 5, 5))
   
-  # More flood days = fewer working days = lower labor cost
-  expect_true(labor_cost(many_floods) < labor_cost(few_floods))
+  low_floods_cost  <- labor_cost(few_floods,  workers = workers, daily_wage = daily_wage,
+                                 flood_threshold = threshold, work_days = work_days)
+  high_floods_cost <- labor_cost(many_floods, workers = workers, daily_wage = daily_wage,
+                                 flood_threshold = threshold, work_days = work_days)
+  expect_true(high_floods_cost < low_floods_cost)
   
 })

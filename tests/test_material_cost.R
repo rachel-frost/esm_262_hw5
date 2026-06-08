@@ -1,43 +1,46 @@
-#testing material cost function 
-#Inputs: 
-#Outputs: 
-#Author: Rachel Frost
-
+#testing material cost function
+#Inputs: river height data frame, base_material_cost, flood_threshold, cost_per_day
+#Outputs: total material cost (numeric)
 ###################################
 
-#install packages and load libraries 
-install.packages("roxygen2")
-install.packages("devtools")
-library(roxygen2)
-library(devtools)
+library(testthat)
+library(here)
+source(here("R/count_flood_days.R"))
+source(here("R/material_cost.R"))
 
-test_that("material_cost_works", {
-  
-  test_data_no_flood <- data.frame(
-    day = seq(1, 10),
-    river_ht = rep(5, 10)  # always below threshold
-  )
-  
-  test_data_with_flood <- data.frame(
-    day = seq(1, 10),
-    river_ht = c(5, 5, 25, 25, 25, 5, 5, 5, 5, 5)  # 3 flood days
-  )
-  
-  # No flooding = base cost only
-  expect_equal(material_cost(test_data_no_flood, base_material_cost = 2000000, 
-                             flood_threshold = 20, cost_per_day = 10000), 2000000)
-  
-  # 3 flood days = base + (3 * 10000)
-  expect_equal(material_cost(test_data_with_flood, base_material_cost = 2000000, 
-                             flood_threshold = 20, cost_per_day = 10000), 2030000)
-  
-})
+# Pre-define test inputs
+#base_cost    <- 2000000
+#cost_per_day <- 10000
+#threshold    <- 20
 
-test_that("material_cost_increases_with_more_floods", {
+#test_no_flood <- data.frame(day = 1:10, river_ht = rep(5, 10))
+#test_flood    <- data.frame(day = 1:10, river_ht = c(5, 5, 25, 25, 25, 5, 5, 5, 5, 5))  # 3 flood days
+
+test_that("material_cost works correctly", {
   
-  few_floods <- data.frame(day = 1:10, river_ht = c(25, 5, 5, 5, 5, 5, 5, 5, 5, 5))
+  #Expectation 1: Manual math check
+  expected <- base_cost + (3 * cost_per_day)  # 3 flood days
+  actual <- material_cost(test_flood,
+                          base_material_cost = base_cost,
+                          flood_threshold = threshold,
+                          cost_per_day = cost_per_day)
+  expect_equal(actual, expected)
+  
+  #Expectation 2: Scale check (more floods = higher cost)
+  few_floods  <- data.frame(day = 1:10, river_ht = c(25, 5, 5, 5, 5, 5, 5, 5, 5, 5))
   many_floods <- data.frame(day = 1:10, river_ht = c(25, 25, 25, 25, 25, 5, 5, 5, 5, 5))
   
-  expect_true(material_cost(many_floods) > material_cost(few_floods))
+  low  <- material_cost(few_floods,  base_material_cost = base_cost,
+                        flood_threshold = threshold, cost_per_day = cost_per_day)
+  high <- material_cost(many_floods, base_material_cost = base_cost,
+                        flood_threshold = threshold, cost_per_day = cost_per_day)
+  expect_true(low < high)
+  
+  #Expectation 3: Zero flood days = base cost only
+  no_floods <- material_cost(test_no_flood,
+                             base_material_cost = base_cost,
+                             flood_threshold = threshold,
+                             cost_per_day = cost_per_day)
+  expect_equal(no_floods, base_cost)
   
 })
