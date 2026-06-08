@@ -280,4 +280,7 @@ For help with functions used in this program:
 #help(fatal_cost) 
 ```
 
+```{r}
+usethis::create_package(getwd())
+```
 
