@@ -25,7 +25,3 @@ plus costs from flood delays.
 \description{
 Calculate total material cost for bridge construction
 }
-\examples{
-river_data <- data.frame(day = 1:10, river_ht = c(25, 25, 5, 5, 5, 5, 5, 5, 5, 5))
-material_cost(river_data, base_material_cost = 2000000, flood_threshold = 20)
-}
