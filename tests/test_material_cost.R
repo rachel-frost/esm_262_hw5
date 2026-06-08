@@ -1,8 +1,6 @@
 #testing material cost function
-#Inputs: river height data frame, base_material_cost, flood_threshold, cost_per_day
-#Outputs: total material cost (numeric)
 ###################################
-test_that("material_cost works correctly", {
+test_that("material_cost works", {
   
   #Expectation 1: Manual math check
   expected <- base_cost + (3 * cost_per_day)  # 3 flood days
