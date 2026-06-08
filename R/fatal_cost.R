@@ -13,6 +13,9 @@ fatal_cost = function(crashcount,
                       vsl, 
                       discount,
                       time) {
+  if (crashcount == 0) {
+    return(0)
+  }
   # calculate net present value
   npv = ((crashcount * vsl) / (1 + discount)**time) 
   return(npv)
